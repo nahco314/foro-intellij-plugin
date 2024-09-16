@@ -19,8 +19,6 @@ class ForoApplicationConfigurable : Configurable {
             checkBox("Run format on save").bindSelected(state::runFormatOnSave)
         }
 
-        separator()
-
         group {
             row("Foro executable path:") {
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor()).bindText(state::foroExecutablePath)

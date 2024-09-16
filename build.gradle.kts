@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+    // implementation("io.github.petertrr:kotlin-multiplatform-diff:0.7.0")
 }
 
 group = "com.nahco314"
@@ -14,6 +15,9 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    google()
+    jcenter()
 }
 
 // Configure Gradle IntelliJ Plugin

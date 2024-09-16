@@ -102,7 +102,7 @@ class ForoFormatter {
             }
         """
 
-        println(commandJsonString)
+        // println(commandJsonString)
 
         val socketPath = args.socketDir.resolve("daemon-cmd.sock")
         val address = UnixDomainSocketAddress.of(socketPath)
@@ -115,8 +115,6 @@ class ForoFormatter {
             val byteBuffer = ByteBuffer.wrap(commandJsonString.toByteArray())
             sc.write(byteBuffer)
             sc.shutdownOutput()
-
-            println("Sent command")
 
             val buffer = ByteBuffer.allocate(1024)
             val responseBuilder = StringBuilder()
@@ -134,7 +132,7 @@ class ForoFormatter {
             }
 
             val response = responseBuilder.toString()
-            println(response)
+            // println(response)
             val responseJson = Json.decodeFromString<JsonObject>(response)
             val content = responseJson["PureFormat"]!!.jsonObject
             if (content.containsKey("Success")) {

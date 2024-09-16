@@ -25,7 +25,6 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <actionOnSave id="ForoActionOnSave" implementation="com.nahco314.foro.ForoActionOnSave" order="last"/>
         <applicationService
                 serviceImplementation="com.nahco314.foro.ForoSettings"/>
         <applicationConfigurable
@@ -37,4 +36,10 @@
                            displayType="BALLOON"
                            key="foro"/>
     </extensions>
+
+    <projectListeners>
+        <listener
+                class="com.nahco314.foro.ForoFileSaveListener"
+                topic="com.intellij.openapi.fileEditor.FileDocumentManagerListener"/>
+    </projectListeners>
 </idea-plugin>
