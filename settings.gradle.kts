@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "foro"
+rootProject.name = "foro-intellij-plugin"

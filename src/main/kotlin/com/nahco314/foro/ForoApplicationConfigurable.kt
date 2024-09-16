@@ -92,6 +92,6 @@ class ForoApplicationConfigurable : Configurable {
     }
 
     override fun getDisplayName(): String {
-        return "foro"
+        return "Foro"
     }
 }
