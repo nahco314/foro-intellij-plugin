@@ -16,10 +16,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import java.nio.file.Path
 
-class ForoFileSaveListener(val project: Project) : FileDocumentManagerListener {
-    private val handler = ForoEditorFormatHandler(project)
+internal class ForoFileSaveListener(private val project: Project) : FileDocumentManagerListener {
+    private lateinit var handler: ForoEditorFormatHandler
 
     override fun beforeDocumentSaving(document: Document) {
+        if (!::handler.isInitialized) {
+            handler = ForoEditorFormatHandler(project)
+        }
         handler.format(document, true)
     }
 }
