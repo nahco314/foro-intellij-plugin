@@ -17,8 +17,9 @@ class ForoSettings : SimplePersistentStateComponent<ForoSettingsState>(ForoSetti
 }
 
 class ForoSettingsState : BaseState() {
-    var runFormatOnSave: Boolean = false
-    var foroExecutablePath: String = ""
+    var enabled: Boolean = false
+    var autoFormatOnSave: Boolean = false
+    var foroExecutablePath: String = "/home/nahco314/RustroverProjects/foro/target/release/foro"
     var givenConfigFile: String = ""
     var givenCacheDir: String = ""
     var givenSocketDir: String = ""

@@ -15,8 +15,13 @@ class ForoApplicationConfigurable : Configurable {
     var state: ForoSettingsState = ForoSettings.getInstance().state
     // var fileChooser = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)
     var panel = panel {
-        row {
-            checkBox("Run format on save").bindSelected(state::runFormatOnSave)
+        group {
+            row {
+                checkBox("Enabled").bindSelected(state::enabled)
+            }
+            row {
+                checkBox("Run format on save").bindSelected(state::autoFormatOnSave)
+            }
         }
 
         group {
@@ -53,7 +58,7 @@ class ForoApplicationConfigurable : Configurable {
 
         panel.apply()
 
-        if (!state.runFormatOnSave) {
+        if (!state.enabled) {
             return
         }
 
@@ -79,7 +84,7 @@ class ForoApplicationConfigurable : Configurable {
                 Notifications.Bus.notify(notification, project)
             }
 
-            state.runFormatOnSave = false
+            state.enabled = false
 
             return
         }

@@ -42,4 +42,21 @@
                 class="com.nahco314.foro.ForoFileSaveListener"
                 topic="com.intellij.openapi.fileEditor.FileDocumentManagerListener"/>
     </projectListeners>
+
+    <actions>
+        <action id="ForoFormatAction" text="Format with foro" class="com.nahco314.foro.ForoFormatAction">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift S"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta shift S"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta shift S"/>
+        </action>
+        <action id="ForoFormatAndSaveAction" text="Format and save with foro" class="com.nahco314.foro.ForoFormatAndSaveAction">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl S"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta S"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta S"/>
+        </action>
+    </actions>
 </idea-plugin>
