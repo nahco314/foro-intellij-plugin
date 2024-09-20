@@ -32,9 +32,13 @@ class ForoEditorFormatHandler(val project: Project) {
             return
         }
 
-        val formatter = ForoFormatter()
-
         val psiFile = psiDocumentManager.getPsiFile(document) ?: return
+
+        if ((psiFile.modificationStamp != document.modificationStamp) && isAutoSave) {
+            return
+        }
+
+        val formatter = ForoFormatter()
 
         val path = psiFile.virtualFile.path
         val parent = psiFile.virtualFile.parent.path

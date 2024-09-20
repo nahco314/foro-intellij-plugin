@@ -117,7 +117,7 @@ class ForoFormatter {
             sc.shutdownOutput()
 
             val buffer = ByteBuffer.allocate(1024)
-            val responseBuilder = StringBuilder()
+            val responseBuilder = ByteBuffer.allocate(1024)
 
             while (true) {
                 val bytesRead = sc.read(buffer)
@@ -127,11 +127,11 @@ class ForoFormatter {
                 }
 
                 buffer.flip()
-                responseBuilder.append(Charsets.UTF_8.decode(buffer))
+                responseBuilder.put(buffer)
                 buffer.clear()
             }
 
-            val response = responseBuilder.toString()
+            val response = String(responseBuilder.array(), 0, responseBuilder.position())
             // println(response)
             val responseJson = Json.decodeFromString<JsonObject>(response)
             val content = responseJson["PureFormat"]!!.jsonObject
