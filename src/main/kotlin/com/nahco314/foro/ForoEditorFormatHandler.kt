@@ -34,7 +34,7 @@ class ForoEditorFormatHandler(val project: Project) {
 
         val psiFile = psiDocumentManager.getPsiFile(document) ?: return
 
-        if ((psiFile.modificationStamp != document.modificationStamp) && isAutoSave) {
+        if ((psiFile.text != document.text) && isAutoSave) {
             return
         }
 

@@ -5,7 +5,7 @@ import com.intellij.openapi.components.*
 import java.nio.file.Path
 
 
-@Service
+@Service(Service.Level.APP)
 @State(name = "ForoSettings", storages = [Storage("foro.xml")])
 class ForoSettings : SimplePersistentStateComponent<ForoSettingsState>(ForoSettingsState()) {
     companion object {

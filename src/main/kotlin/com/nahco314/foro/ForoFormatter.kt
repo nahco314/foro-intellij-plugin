@@ -8,6 +8,8 @@ import java.net.StandardProtocolFamily
 import java.net.UnixDomainSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
+import java.nio.charset.Charset
+import java.nio.charset.CharsetDecoder
 import java.nio.file.Path
 
 class ForoUnexpectedErrorException(message: String): Exception(message)
@@ -117,7 +119,10 @@ class ForoFormatter {
             sc.shutdownOutput()
 
             val buffer = ByteBuffer.allocate(1024)
-            val responseBuilder = ByteBuffer.allocate(1024)
+            val decoder: CharsetDecoder = Charset.forName("UTF-8").newDecoder()
+
+            val responseBuilder = StringBuilder()
+            val remainderBuffer = ByteBuffer.allocate(256)
 
             while (true) {
                 val bytesRead = sc.read(buffer)
@@ -127,11 +132,25 @@ class ForoFormatter {
                 }
 
                 buffer.flip()
-                responseBuilder.put(buffer)
+
+                remainderBuffer.flip()
+                val combinedBuffer = ByteBuffer.allocate(remainderBuffer.remaining() + buffer.remaining())
+                combinedBuffer.put(remainderBuffer)
+                combinedBuffer.put(buffer)
+                combinedBuffer.flip()
+
+                val decoded = decoder.decode(combinedBuffer).toString()
+                responseBuilder.append(decoded)
+
+                remainderBuffer.clear()
+                if (combinedBuffer.hasRemaining()) {
+                    remainderBuffer.put(combinedBuffer)
+                }
+
                 buffer.clear()
             }
 
-            val response = String(responseBuilder.array(), 0, responseBuilder.position())
+            val response = responseBuilder.toString()
             // println(response)
             val responseJson = Json.decodeFromString<JsonObject>(response)
             val content = responseJson["PureFormat"]!!.jsonObject
