@@ -64,7 +64,7 @@ class ForoApplicationConfigurable : Configurable {
 
         val res: ForoConfigResult
         try {
-            res  = loadForoConfig(
+            res = loadForoConfig(
                 pPath(state.foroExecutablePath),
                 pPath(state.givenConfigFile),
                 pPath(state.givenCacheDir),
@@ -89,6 +89,7 @@ class ForoApplicationConfigurable : Configurable {
             return
         }
 
+        state.foroExecutablePath = res.foroExecutablePath.toString()
         state.configFile = res.configFile
         state.cacheDir = res.cacheDir
         state.socketDir = res.socketDir

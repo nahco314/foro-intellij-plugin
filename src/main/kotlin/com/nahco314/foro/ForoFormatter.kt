@@ -1,5 +1,6 @@
 package com.nahco314.foro
 
+import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
@@ -7,10 +8,14 @@ import kotlinx.serialization.json.jsonPrimitive
 import java.net.StandardProtocolFamily
 import java.net.UnixDomainSocketAddress
 import java.nio.ByteBuffer
+import java.nio.CharBuffer
 import java.nio.channels.SocketChannel
-import java.nio.charset.Charset
 import java.nio.charset.CharsetDecoder
+import java.nio.charset.CoderResult
+import java.nio.charset.CodingErrorAction
 import java.nio.file.Path
+import java.util.*
+import kotlin.text.Charsets
 
 class ForoUnexpectedErrorException(message: String): Exception(message)
 
@@ -119,10 +124,12 @@ class ForoFormatter {
             sc.shutdownOutput()
 
             val buffer = ByteBuffer.allocate(1024)
-            val decoder: CharsetDecoder = Charset.forName("UTF-8").newDecoder()
-
+            val decoder: CharsetDecoder = Charsets.UTF_8.newDecoder();
             val responseBuilder = StringBuilder()
-            val remainderBuffer = ByteBuffer.allocate(256)
+
+            val leftover = ByteBuffer.allocate(4)
+            val combined = ByteBuffer.allocate(4 + 1024)
+            val charBuffer = CharBuffer.allocate(4 + 1024)
 
             while (true) {
                 val bytesRead = sc.read(buffer)
@@ -131,26 +138,32 @@ class ForoFormatter {
                     break
                 }
 
+                leftover.flip()
                 buffer.flip()
 
-                remainderBuffer.flip()
-                val combinedBuffer = ByteBuffer.allocate(remainderBuffer.remaining() + buffer.remaining())
-                combinedBuffer.put(remainderBuffer)
-                combinedBuffer.put(buffer)
-                combinedBuffer.flip()
+                combined.put(leftover)
+                combined.put(buffer)
+                combined.flip()
 
-                val decoded = decoder.decode(combinedBuffer).toString()
-                responseBuilder.append(decoded)
+                leftover.clear()
+                buffer.clear()
 
-                remainderBuffer.clear()
-                if (combinedBuffer.hasRemaining()) {
-                    remainderBuffer.put(combinedBuffer)
+                decoder.decode(combined, charBuffer, false)
+
+                charBuffer.flip()
+                responseBuilder.append(charBuffer)
+
+                if (combined.position() != bytesRead) {
+                    leftover.put(combined)
                 }
 
-                buffer.clear()
+                charBuffer.clear()
+
+                combined.clear()
             }
 
             val response = responseBuilder.toString()
+
             // println(response)
             val responseJson = Json.decodeFromString<JsonObject>(response)
             val content = responseJson["PureFormat"]!!.jsonObject
