@@ -26,7 +26,7 @@ class ForoApplicationConfigurable : Configurable {
 
         group {
             row("Foro executable path:") {
-                textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor()).bindText(state::foroExecutablePath)
+                textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor()).bindText(state::givenForoExecutablePath)
             }
             row("Config file path:") {
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor()).bindText(state::givenConfigFile)
@@ -65,7 +65,7 @@ class ForoApplicationConfigurable : Configurable {
         val res: ForoConfigResult
         try {
             res = loadForoConfig(
-                pPath(state.foroExecutablePath),
+                pPath(state.givenForoExecutablePath),
                 pPath(state.givenConfigFile),
                 pPath(state.givenCacheDir),
                 pPath(state.givenSocketDir)
@@ -89,7 +89,7 @@ class ForoApplicationConfigurable : Configurable {
             return
         }
 
-        state.foroExecutablePath = res.foroExecutablePath.toString()
+        state.foroExecutablePath = res.foroExecutablePath
         state.configFile = res.configFile
         state.cacheDir = res.cacheDir
         state.socketDir = res.socketDir

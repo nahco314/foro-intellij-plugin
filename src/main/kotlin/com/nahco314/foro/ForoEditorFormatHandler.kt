@@ -47,7 +47,7 @@ class ForoEditorFormatHandler(val project: Project) {
             Path.of(path),
             psiFile.text,
             Path.of(project.basePath ?: parent),
-            Path.of(foroSettings.state.foroExecutablePath),
+            foroSettings.state.foroExecutablePath!!,
             foroSettings.state.configFile!!,
             foroSettings.state.cacheDir!!,
             foroSettings.state.socketDir!!

@@ -19,11 +19,12 @@ class ForoSettings : SimplePersistentStateComponent<ForoSettingsState>(ForoSetti
 class ForoSettingsState : BaseState() {
     var enabled: Boolean = false
     var autoFormatOnSave: Boolean = false
-    var foroExecutablePath: String = ""
+    var givenForoExecutablePath: String = ""
     var givenConfigFile: String = ""
     var givenCacheDir: String = ""
     var givenSocketDir: String = ""
     var configFile: Path? = null
     var cacheDir: Path? = null
     var socketDir: Path? = null
+    var foroExecutablePath: Path? = null
 }
