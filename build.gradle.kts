@@ -1,13 +1,21 @@
+import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.1.0"
     kotlin("plugin.serialization") version "2.0.20"
 }
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     // implementation("io.github.petertrr:kotlin-multiplatform-diff:0.7.0")
+
+    intellijPlatform {
+        intellijIdeaCommunity("2024.2.2")
+
+        instrumentationTools()
+    }
 }
 
 group = "com.nahco314"
@@ -17,16 +25,10 @@ repositories {
     mavenCentral()
     mavenLocal()
     google()
-    jcenter()
-}
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2023.2.6")
-    type.set("IC") // Target IDE Platform
-
-    plugins.set(listOf(/* Plugin Dependencies */))
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 tasks {

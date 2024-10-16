@@ -58,10 +58,6 @@ fun loadForoConfig(givenForoExecutablePath: Path?, givenConfigFile: Path?, given
 
     val inputJson = Json.encodeToString(inputMap)
 
-    val tmp = File.createTempFile("foro-idea-tmp", null)
-    tmp.deleteOnExit()
-    tmp.writer().write(inputJson)
-
     val parts = arrayOf(foroExecutablePath.toString(), "internal", "info")
 
     // /home/nahco314/RustroverProjects/foro/target/release/foro
