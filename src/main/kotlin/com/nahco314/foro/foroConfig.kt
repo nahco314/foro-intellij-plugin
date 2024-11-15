@@ -13,6 +13,7 @@ import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.SystemInfo
 import com.intellij.psi.PsiDocumentManager
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -38,6 +39,17 @@ data class ForoConfigResult(
 fun findForoFromPath(): Path? {
     val path = System.getenv("PATH")
     val paths = path.split(File.pathSeparator)
+
+    if (SystemInfo.isUnix) {
+        val home = System.getenv("HOME")
+        val cargoBin = Path.of(home, ".cargo", "bin", "foro")
+        if (cargoBin.toFile().exists()) {
+            return cargoBin
+        }
+    }
+
+    // todo: finding on windows
+
     return paths.map { Path.of(it) }
         .map { it.resolve(FORO_COMMAND) }
         .firstOrNull { it.toFile().exists() }

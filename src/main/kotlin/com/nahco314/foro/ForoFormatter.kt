@@ -16,6 +16,7 @@ import java.nio.charset.CodingErrorAction
 import java.nio.file.Path
 import java.util.*
 import kotlin.text.Charsets
+import kotlin.time.TimeSource
 
 class ForoUnexpectedErrorException(message: String): Exception(message)
 
@@ -91,6 +92,8 @@ class ForoFormatter {
     }
 
     private fun formatInner(args: FormatArgs): FormatResult {
+                val start = TimeSource.Monotonic.markNow()
+
         val commandJsonString = """
             {
                 "command": {
@@ -109,19 +112,29 @@ class ForoFormatter {
             }
         """
 
-        // println(commandJsonString)
+        println("Foro: 0.0 ${start.elapsedNow().inWholeMicroseconds}µs")
 
         val socketPath = args.socketDir.resolve("daemon-cmd.sock")
+        println("Foro: 0.1 ${start.elapsedNow().inWholeMicroseconds}µs")
+
         val address = UnixDomainSocketAddress.of(socketPath)
+        println("Foro: 0.2 ${start.elapsedNow().inWholeMicroseconds}µs")
 
         val result: FormatResult
 
         SocketChannel.open(StandardProtocolFamily.UNIX).use { sc ->
+        println("Foro: 0 ${start.elapsedNow().inWholeMicroseconds}µs")
+
             sc.connect(address)
+
+        println("Foro: 1 ${start.elapsedNow().inWholeMicroseconds}µs")
 
             val byteBuffer = ByteBuffer.wrap(commandJsonString.toByteArray())
             sc.write(byteBuffer)
             sc.shutdownOutput()
+
+        println("Foro: 2 ${start.elapsedNow().inWholeMicroseconds}µs")
+
 
             val buffer = ByteBuffer.allocate(1024)
             val decoder: CharsetDecoder = Charsets.UTF_8.newDecoder();
@@ -162,7 +175,12 @@ class ForoFormatter {
                 combined.clear()
             }
 
+        println("Foro: 3 ${start.elapsedNow().inWholeMicroseconds}µs")
+
+
             val response = responseBuilder.toString()
+
+        println("Foro: 4 ${start.elapsedNow().inWholeMicroseconds}µs")
 
             // println(response)
             val responseJson = Json.decodeFromString<JsonObject>(response)
@@ -174,7 +192,13 @@ class ForoFormatter {
             } else {
                 result = FormatResult.Error(content["Error"]!!.jsonPrimitive.toString())
             }
+
+        println("Foro: 5 ${start.elapsedNow().inWholeMicroseconds}µs")
+
         }
+
+        println("Foro: 6 ${start.elapsedNow().inWholeMicroseconds}µs")
+
 
         return result
     }

@@ -5,18 +5,15 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Foro</name>
+    <name>foro</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="nahco3_ta@yahoo.co.jp" url="https://github.com/nahco314">nahco314</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+    <description>todo!</description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -43,20 +40,20 @@
                 topic="com.intellij.openapi.fileEditor.FileDocumentManagerListener"/>
     </projectListeners>
 
+    <applicationListeners>
+        <listener
+                class="com.nahco314.foro.ForoActionListener"
+                topic="com.intellij.openapi.actionSystem.ex.AnActionListener"/>
+    </applicationListeners>
+
     <actions>
         <action id="ForoFormatAction" text="Format with foro" class="com.nahco314.foro.ForoFormatAction">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift S"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta shift S"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta shift S"/>
         </action>
         <action id="ForoFormatAndSaveAction" text="Format and save with foro" class="com.nahco314.foro.ForoFormatAndSaveAction">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl S"/>
-            <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta S"/>
-            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta S"/>
         </action>
     </actions>
 </idea-plugin>

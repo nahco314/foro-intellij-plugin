@@ -5,10 +5,12 @@ import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.undo.UndoManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener
 import com.intellij.openapi.options.ShowSettingsUtil
@@ -23,6 +25,9 @@ internal class ForoFileSaveListener(private val project: Project) : FileDocument
         if (!::handler.isInitialized) {
             handler = ForoEditorFormatHandler(project)
         }
-        handler.format(document, true)
+
+        val isManualSave = service<ForoDetectManualSaveService>().isSavingManually()
+
+        handler.format(document, !isManualSave)
     }
 }

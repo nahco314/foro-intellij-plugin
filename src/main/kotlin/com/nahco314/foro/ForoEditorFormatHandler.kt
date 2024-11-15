@@ -24,11 +24,17 @@ class ForoEditorFormatHandler(val project: Project) {
     fun format(document: Document, isAutoSave: Boolean) {
         val start = System.currentTimeMillis()
 
+        println("Foro: Formatting $isAutoSave")
+
         if (!foroSettings.state.enabled) {
             return
         }
 
-        if ((!foroSettings.state.autoFormatOnSave) && isAutoSave) {
+        if ((!foroSettings.state.formatOnManualSave) && !isAutoSave) {
+            return
+        }
+
+        if ((!foroSettings.state.formatOnAutoSave) && isAutoSave) {
             return
         }
 
@@ -47,16 +53,17 @@ class ForoEditorFormatHandler(val project: Project) {
             Path.of(path),
             psiFile.text,
             Path.of(project.basePath ?: parent),
-            foroSettings.state.foroExecutablePath!!,
-            foroSettings.state.configFile!!,
-            foroSettings.state.cacheDir!!,
-            foroSettings.state.socketDir!!
+            Path.of(foroSettings.state.foroExecutablePath!!),
+            Path.of(foroSettings.state.configFile!!),
+            Path.of(foroSettings.state.cacheDir!!),
+            Path.of(foroSettings.state.socketDir!!)
         )
 
         val result: FormatResult
 
         try {
             result = formatter.format(args)
+        println("Foro: aaa ${System.currentTimeMillis() - start}ms")
         } catch (e: ForoUnexpectedErrorException) {
             val notification = Notification(
                 "Foro",
@@ -74,7 +81,7 @@ class ForoEditorFormatHandler(val project: Project) {
 
             Notifications.Bus.notify(notification, project)
 
-            foroSettings.state.autoFormatOnSave = false
+            foroSettings.state.formatOnAutoSave = false
 
             return
         }

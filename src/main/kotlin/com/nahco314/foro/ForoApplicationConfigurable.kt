@@ -12,7 +12,7 @@ import com.intellij.ui.dsl.builder.*
 import java.nio.file.Path
 
 class ForoApplicationConfigurable : Configurable {
-    var state: ForoSettingsState = ForoSettings.getInstance().state
+    var state: ForoSettings = ForoSettings.getInstance().state
     // var fileChooser = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)
     var panel = panel {
         group {
@@ -20,7 +20,10 @@ class ForoApplicationConfigurable : Configurable {
                 checkBox("Enabled").bindSelected(state::enabled)
             }
             row {
-                checkBox("Run format on save").bindSelected(state::autoFormatOnSave)
+                checkBox("Run format on manual-save").bindSelected(state::formatOnManualSave)
+            }
+            row {
+                checkBox("Run format on auto-save").bindSelected(state::formatOnAutoSave)
             }
         }
 
@@ -49,7 +52,10 @@ class ForoApplicationConfigurable : Configurable {
     }
 
     override fun apply() {
-        fun pPath(pathName: String): Path? {
+        fun pPath(pathName: String?): Path? {
+            if (pathName == null) {
+                return null
+            }
             if (pathName.isEmpty()) {
                 return null
             }
@@ -89,10 +95,10 @@ class ForoApplicationConfigurable : Configurable {
             return
         }
 
-        state.foroExecutablePath = res.foroExecutablePath
-        state.configFile = res.configFile
-        state.cacheDir = res.cacheDir
-        state.socketDir = res.socketDir
+        state.foroExecutablePath = res.foroExecutablePath.toString()
+        state.configFile = res.configFile.toString()
+        state.cacheDir = res.cacheDir.toString()
+        state.socketDir = res.socketDir.toString()
     }
 
     override fun getDisplayName(): String {
