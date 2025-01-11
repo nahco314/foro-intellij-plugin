@@ -107,7 +107,8 @@ class ForoFormatter {
                     "config_file": "${args.configFile}",
                     "cache_dir": "${args.cacheDir}",
                     "socket_dir": "${args.socketDir}",
-                    "no_cache": false
+                    "no_cache": false,
+                    "no_long_log": false
                 }
             }
         """
