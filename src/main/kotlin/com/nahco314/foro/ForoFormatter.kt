@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import java.io.ByteArrayOutputStream
 import java.net.StandardProtocolFamily
 import java.net.UnixDomainSocketAddress
 import java.nio.ByteBuffer
@@ -136,52 +137,20 @@ class ForoFormatter {
 
         println("Foro: 2 ${start.elapsedNow().inWholeMicroseconds}µs")
 
-
-            val buffer = ByteBuffer.allocate(1024)
-            val decoder: CharsetDecoder = Charsets.UTF_8.newDecoder();
-            val responseBuilder = StringBuilder()
-
-            val leftover = ByteBuffer.allocate(4)
-            val combined = ByteBuffer.allocate(4 + 1024)
-            val charBuffer = CharBuffer.allocate(4 + 1024)
+            val outputBuffer = ByteArrayOutputStream()
+            val readBuffer = ByteBuffer.allocate(4096)
 
             while (true) {
-                val bytesRead = sc.read(buffer)
-
+                readBuffer.clear()
+                val bytesRead = sc.read(readBuffer)
                 if (bytesRead == -1) {
                     break
                 }
-
-                leftover.flip()
-                buffer.flip()
-
-                combined.put(leftover)
-                combined.put(buffer)
-                combined.flip()
-
-                leftover.clear()
-                buffer.clear()
-
-                decoder.decode(combined, charBuffer, false)
-
-                charBuffer.flip()
-                responseBuilder.append(charBuffer)
-
-                if (combined.position() != bytesRead) {
-                    leftover.put(combined)
-                }
-
-                charBuffer.clear()
-
-                combined.clear()
+                outputBuffer.write(readBuffer.array(), 0, bytesRead)
             }
 
-        println("Foro: 3 ${start.elapsedNow().inWholeMicroseconds}µs")
-
-
-            val response = responseBuilder.toString()
-
-        println("Foro: 4 ${start.elapsedNow().inWholeMicroseconds}µs")
+            // まとめて UTF-8 文字列に変換
+            val response = outputBuffer.toByteArray().toString(Charsets.UTF_8)
 
             // println(response)
             val responseJson = Json.decodeFromString<JsonObject>(response)

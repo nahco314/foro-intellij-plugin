@@ -9,7 +9,6 @@ import io.ktor.util.reflect.*
 
 class ForoActionListener : AnActionListener {
     override fun beforeActionPerformed(action: AnAction, event: AnActionEvent) {
-        println(action.javaClass.name)
         if (action.instanceOf(SaveAllAction::class)) {
             service<ForoDetectManualSaveService>().setSavingManually(true)
         }
@@ -19,10 +18,5 @@ class ForoActionListener : AnActionListener {
         if (action.instanceOf(SaveAllAction::class)) {
             service<ForoDetectManualSaveService>().setSavingManually(false)
         }
-    }
-
-    override fun afterEditorTyping(c: Char, dataContext: DataContext) {
-        println(c)
-        dataContext.getData()
     }
 }

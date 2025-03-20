@@ -73,9 +73,7 @@ class ForoEditorFormatHandler(val project: Project) {
             )
             notification.addAction(object : NotificationAction("Open settings") {
                 override fun actionPerformed(e: AnActionEvent, notification: Notification) {
-                    val dataContext = e.dataContext;
-                    val p = dataContext.getData("project") as Project
-                    ShowSettingsUtil.getInstance().showSettingsDialog(p, ForoApplicationConfigurable::class.java)
+                    ShowSettingsUtil.getInstance().showSettingsDialog(e.project, ForoApplicationConfigurable::class.java)
                 }
             })
 

@@ -1,4 +1,6 @@
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
     id("java")
@@ -12,14 +14,15 @@ dependencies {
     // implementation("io.github.petertrr:kotlin-multiplatform-diff:0.7.0")
 
     intellijPlatform {
-        intellijIdeaCommunity("2024.2.2")
+        intellijIdeaCommunity("2024.3")
 
         instrumentationTools()
+        pluginVerifier()
     }
 }
 
 group = "com.nahco314"
-version = "1.0-SNAPSHOT"
+version = "1.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -28,6 +31,17 @@ repositories {
 
     intellijPlatform {
         defaultRepositories()
+    }
+}
+
+intellijPlatform {
+    pluginVerification {
+        ides {
+            recommended()
+            select {
+                ide(IntelliJPlatformType.IntellijIdeaUltimate, "2024.3.5")
+            }
+        }
     }
 }
 
@@ -42,8 +56,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("232")
-        untilBuild.set("242.*")
+        untilBuild.set("260.*")
     }
 
     signPlugin {
